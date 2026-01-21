@@ -6,3 +6,10 @@ node_modules/
 
 # logs
 logfile
+
+package-lock.json
+
+# tests
+manual-security-tests.sh
+security-tests.js
+vulnerableValidator.js

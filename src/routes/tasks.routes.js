@@ -3,6 +3,33 @@ const pool = require('../config/db');
 const router = express.Router();
 const auth = require('../middleware/auth');
 
+/**
+ * @swagger
+ * /api/tasks:
+ *   post:
+ *     summary: Create a new task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Task created successfully
+ *       401:
+ *         description: Unauthorized
+ */
 router.post('/', auth, async (req, res) => {
     const { title, description } = req.body;
 
@@ -18,6 +45,20 @@ router.post('/', auth, async (req, res) => {
     res.status(201).json(task.rows[0]);
 });
 
+/**
+ * @swagger
+ * /api/tasks:
+ *   get:
+ *     summary: Get all user tasks
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of tasks
+ *       401:
+ *         description: Unauthorized
+ */
 // Get all users tasks
 router.get('/', auth, async (req, res) => {
     const tasks = await pool.query(
@@ -28,6 +69,38 @@ router.get('/', auth, async (req, res) => {
     res.json(tasks.rows);
 });
 
+/**
+ * @swagger
+ * /api/tasks/{id}:
+ *   put:
+ *     summary: Update a task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Task updated successfully
+ *       404:
+ *         description: Task not found
+ */
 // Update task
 router.put('/:id', auth, async (req, res) => {
     const { title, description, status } = req.body;
@@ -49,6 +122,26 @@ router.put('/:id', auth, async (req, res) => {
     res.json(task.rows[0]);
 });
 
+/**
+ * @swagger
+ * /api/tasks/{id}:
+ *   delete:
+ *     summary: Delete a task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Task deleted successfully
+ *       404:
+ *         description: Task not found
+ */
 // Delete task
 router.delete('/:id', auth, async (req, res) => {
     const task = await pool.query(
