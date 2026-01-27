@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: taskmanager
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  
+  api:
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: taskmanager
+      JWT_SECRET: supersecretkey
+    depends_on:
+      - db
+
+volumes:
+  db_data:
