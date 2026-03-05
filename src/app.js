@@ -1,6 +1,7 @@
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
+const cors = require('cors');
 const app = express();
 const healthRoutes = require('./routes/health.routes');
 const userRoutes = require('./routes/users.routes');
@@ -9,6 +10,7 @@ const authRoutes = require('./routes/authRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const rateLimit = require('express-rate-limit');
 
+app.use(cors());
 app.use(express.json());
 
 // Swagger UI
